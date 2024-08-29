@@ -1,8 +1,12 @@
 import React from 'react'
-
+import AboutUs from '../components/AboutUs'
+import Tournament from './Tournament'
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      {/* <AboutUs/> */}
+      <Tournament/>
+    </div>
   )
 }
 
