@@ -1,0 +1,21 @@
+[
+    {
+      "id": "1",
+      "name": "Summer Showdown",
+      "date": "2024-09-15",
+      "prize": "$5000"
+    },
+    {
+      "id": "2",
+      "name": "Fall Frenzy",
+      "date": "2024-10-10",
+      "prize": "$3000"
+    },
+    {
+      "id": "3",
+      "name": "Winter War",
+      "date": "2024-12-05",
+      "prize": "$7000"
+    }
+  ]
+  
