@@ -3,9 +3,8 @@ import { TextField, Button, Container, Grid, Typography, MenuItem, Select, FormC
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { registerNewUser } from '../services/users';
-import Login from './Login'; // Ensure this is the path to your Login component
+import Login from './Login';
 
-// Create a dark blue theme
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -31,16 +30,35 @@ const Register = () => {
     interests: [],
     lastActive: new Date(),
     location: '',
-    language: [],
-    skillLevel: '',
+    preferences: {
+      language: [],
+      skillLevel: ''
+    },
     profileImage: '',
     skills: [],
   });
-  const [showLogin, setShowLogin] = useState(false); // State to toggle between Register and Login
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (name.startsWith('preferences.')) {
+      const [_, subName] = name.split('.');
+      setFormData((prevData) => ({
+        ...prevData,
+        preferences: {
+          ...prevData.preferences,
+          [subName]: subName === 'language' ? value.split(',').map(item => item.trim()) : value,
+        },
+      }));
+    } else if (['games', 'interests', 'skills'].includes(name)) {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value.split(',').map(item => item.trim()),
+      }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -50,7 +68,7 @@ const Register = () => {
 
   const nextStep = () => setStep((prevStep) => prevStep + 1);
   const prevStep = () => setStep((prevStep) => prevStep - 1);
-  const toggleForm = () => setShowLogin((prevShow) => !prevShow); // Toggle between Register and Login
+  const toggleForm = () => setShowLogin((prevShow) => !prevShow);
 
   const formFields = [
     [
@@ -69,9 +87,9 @@ const Register = () => {
       { name: 'skills', label: 'Skills (comma-separated)', type: 'text', placeholder: 'e.g., Sniper, Support' },
     ],
     [
-      { name: 'language', label: 'Language Preferences (comma-separated)', type: 'text', placeholder: 'e.g., English, Hindi' },
+      { name: 'preferences.language', label: 'Language Preferences (comma-separated)', type: 'text', placeholder: 'e.g., English, Hindi' },
       {
-        name: 'skillLevel',
+        name: 'preferences.skillLevel',
         label: 'Skill Level',
         type: 'select',
         options: [
@@ -91,7 +109,7 @@ const Register = () => {
             <InputLabel>{field.label}</InputLabel>
             <Select
               name={field.name}
-              value={formData[field.name]}
+              value={formData.preferences[field.name.split('.')[1]]}
               onChange={handleChange}
               variant="outlined"
               color="primary"
@@ -109,7 +127,7 @@ const Register = () => {
             label={field.label}
             name={field.name}
             type={field.type}
-            value={formData[field.name]}
+            value={field.name.includes('preferences') ? formData.preferences[field.name.split('.')[1]].join(', ') : formData[field.name]}
             onChange={handleChange}
             variant="outlined"
             color="primary"
@@ -142,7 +160,7 @@ const Register = () => {
                   </Step>
                 ))}
               </Stepper>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={(e) => e.preventDefault()}>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
@@ -170,7 +188,7 @@ const Register = () => {
                   </Grid>
                   <Grid item xs={6}>
                     {step === formFields.length - 1 ? (
-                      <Button type="submit" variant="contained" color="primary" fullWidth>
+                      <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
                         Register
                       </Button>
                     ) : (

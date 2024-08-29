@@ -38,3 +38,4 @@ export const registerNewUser = async (userData) => {
       console.error('Error logging in user:', error.message);
     }
   };
+

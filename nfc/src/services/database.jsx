@@ -1,46 +1,45 @@
-// crudService.js
-import { db } from '../utils/firebase-config';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
-
-// Create a new document
-export const createDocument = async (collectionName, data) => {
+const handleAccept = async (notificationId, senderUid) => {
   try {
-    await addDoc(collection(db, collectionName), data);
-    console.log("Document created successfully.");
-  } catch (error) {
-    console.error("Error creating document:", error.message);
-  }
-};
+    console.log(senderUid, notificationId);
 
-// Read documents
-export const readDocuments = async (collectionName) => {
-  try {
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return documents;
-  } catch (error) {
-    console.error("Error reading documents:", error.message);
-  }
-};
+    // Update the friend request status to 'accepted'
+    const friendRequestRef = doc(db, 'friendRequests', notificationId);
+    await updateDoc(friendRequestRef, { status: 'accepted' });
+    console.log('Friend request accepted');
 
-// Update a document
-export const updateDocument = async (collectionName, id, data) => {
-  try {
-    const docRef = doc(db, collectionName, id);
-    await updateDoc(docRef, data);
-    console.log("Document updated successfully.");
-  } catch (error) {
-    console.error("Error updating document:", error.message);
-  }
-};
+    // Fetch the sender's user document
+    const senderUser = await readDocumentByUid('users', senderUid);
+    if (!senderUser) {
+      throw new Error('Sender does not exist in the Firestore database');
+    }
+    console.log("Sender's user document:", senderUser);
 
-// Delete a document
-export const deleteDocument = async (collectionName, id) => {
-  try {
-    const docRef = doc(db, collectionName, id);
-    await deleteDoc(docRef);
-    console.log("Document deleted successfully.");
+    // Fetch the current user's document
+    const currentUser = await readDocumentByUid('users', currentUserId);
+    if (!currentUser) {
+      throw new Error('Current user does not exist in the Firestore database');
+    }
+    
+    // Update the friends list for both users
+    const updatedSenderFriends = { ...senderUser.friends, [currentUserId]: `/users/${currentUserId}` };
+    const updatedCurrentUserFriends = { ...currentUser.friends, [senderUid]: `/users/${senderUid}` };
+
+    const currentUserRef = doc(db, 'users', currentUserId);
+    const senderUserRef = doc(db, 'users', senderUid);
+
+    await updateDoc(currentUserRef, { friends: updatedCurrentUserFriends });
+    await updateDoc(senderUserRef, { friends: updatedSenderFriends });
+
+    console.log('Friends list updated for both users');
+
+    // Fetch updated notifications
+    const friendRequestsRef = collection(db, 'friendRequests');
+    const q = query(friendRequestsRef, where('receiverId', '==', currentUserId), where('status', '==', 'pending'));
+    const querySnapshot = await getDocs(q);
+    const updatedRequests = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setNotifications(updatedRequests);
+
   } catch (error) {
-    console.error("Error deleting document:", error.message);
+    console.error('Error accepting friend request:', error.message);
   }
 };

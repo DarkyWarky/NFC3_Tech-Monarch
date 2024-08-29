@@ -1,5 +1,6 @@
 import React from 'react'
 import { signOutUser } from '../services/auth';
+import Notifications from '../components/Notifications';
 
 const Home = () => {
   function signout() {
@@ -8,6 +9,7 @@ const Home = () => {
   return (
     <div>
       <button onClick={signout}>signout</button>
+      <Notifications/>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { auth } from './utils/firebase-config'; 
 import Home from './pages/Home';
 import Register from './components/Register';
+import Users from './components/Users';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,6 +34,10 @@ function App() {
         <Route
           path="/register"
           element={isAuthenticated ? <Navigate to="/" /> : <Register />}
+        />
+        <Route
+          path="/users"
+          element={isAuthenticated ? <Users /> : <Users />}
         />
       </Routes>
     </BrowserRouter>
