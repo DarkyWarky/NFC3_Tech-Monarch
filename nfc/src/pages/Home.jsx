@@ -7,16 +7,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const Home = () => {
-  // function signout() {
-  //   signOutUser();
-  // }
   return (
     <div>
-      <Navbar/>
       <Videopage/>
       <AboutUs/>
-      {/* <button onClick={signout}>signout</button> */}
-      {/* <Notifications/> */}
       <Footer/>
     </div>
   )

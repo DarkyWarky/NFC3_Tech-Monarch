@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent, TextField, Divider, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import { motion } from "framer-motion";
+import Tournament from './Tournament';
 
 const TournamentPage = () => {
   // Sample data with an additional tournament
@@ -57,9 +58,10 @@ const TournamentPage = () => {
   };
 
   return (
+    <>
     <Box
       sx={{
-        height: '100vh',
+        height: '110vh',
         width: '100vw',
         background: `linear-gradient(to bottom, #0a1d37, #5c2a9b), 
           url('https://images.unsplash.com/photo-1519660364-7f54c16c6b02?fit=crop&w=1920&h=1080')`,
@@ -192,6 +194,8 @@ const TournamentPage = () => {
         </Dialog>
       )}
     </Box>
+    <Tournament/>
+    </>
   );
 };
 

@@ -7,14 +7,14 @@ import { motion } from 'framer-motion';
 
 const navLinks = [
   { text: 'Home', href: '/' },
-  { text: 'About Us', href: '/about' },
-  { text: 'Contact', href: '/contact' },
+  { text: 'Players', href: '/users' },
+  { text: 'Contact/FAQs', href: '/faq' },
 ];
 
 const gameLinks = [
-  { text: 'Valorant', href: '/game1' },
-  { text: 'League Of Legends', href: '/game2' },
-  { text: 'Pubg', href: '/game3' },
+  { text: 'Tournament', href: '/tournament' },
+  { text: 'Matchmaking', href: '/match' },
+  { text: 'Session', href: '/session' },
 ];
 
 function HideOnScroll({ children }) {
@@ -26,7 +26,7 @@ function HideOnScroll({ children }) {
   );
 }
 
-function Navbar({ isAuthenticated = false, user = {} }) {
+function Navbar({ isAuthenticated = true, user = {username:"Danny"} }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -40,7 +40,7 @@ function Navbar({ isAuthenticated = false, user = {} }) {
   return (
     <HideOnScroll>
       <AppBar
-        position="fixed"
+        position="relative"
         sx={{
           backgroundColor: 'rgba(0, 10, 50, 0.9)',
           transition: 'background-color 0.3s ease',
@@ -49,7 +49,7 @@ function Navbar({ isAuthenticated = false, user = {} }) {
       >
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img src="src/components/logo.png" alt="Logo" style={{ height: 40, marginRight: 16 }} />
+            <img src="/logo.png" alt="Logo" style={{ height: 40, marginRight: 16 }} />
             <Typography variant="h6" sx={{ color: 'yellow', fontWeight: 'bold' }}>
               SkillSync
             </Typography>
@@ -128,11 +128,13 @@ function Navbar({ isAuthenticated = false, user = {} }) {
 
             {isAuthenticated ? (
               <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
+                <Link to="/dashboard">
                 <Avatar
                   alt={user.username}
                   src={user.profilePicture}
                   sx={{ width: 32, height: 32, mr: 1 }}
                 />
+                </Link>
                 <Typography variant="body1" sx={{ color: 'yellow' }}>
                   {user.username}
                 </Typography>
@@ -141,7 +143,7 @@ function Navbar({ isAuthenticated = false, user = {} }) {
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   component={Link}
-                  to="/login"
+                  to="/register"
                   sx={{
                     color: 'yellow',
                     border: '1px solid yellow',

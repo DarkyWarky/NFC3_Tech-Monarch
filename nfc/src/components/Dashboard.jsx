@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, Avatar, Divider } from "@mui/material";
 import { motion } from "framer-motion";
 import { user } from '../services/userData'; // Import the user data
+import PlaytimeDashboard from "../components/PlaytimeDashboard"
 
 const Dashboard = () => {
   const InfoItem = ({ label, value }) => (
@@ -32,11 +33,12 @@ const Dashboard = () => {
   );
 
   return (
+    <>
     <Box
       sx={{
         height: '130vh',
         width: '100vw',
-        background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+        background: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
           url('https://i.pinimg.com/originals/ec/31/12/ec31124f9d13dbd3d31efd38f5256cf8.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -117,6 +119,8 @@ const Dashboard = () => {
         ))}
       </Box>
     </Box>
+    <PlaytimeDashboard />
+    </>
   );
 };
 
